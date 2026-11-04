@@ -1,0 +1,26 @@
+spring:
+  profiles:
+    active: local
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+distill:
+  llm:
+    provider: ollama
+    base-url: http://localhost:11434
+    model: llama3.2
+
+---
+spring:
+  config:
+    activate:
+      on-profile: aws
+
+distill:
+  llm:
+    provider: bedrock
+    model: anthropic.claude-3-haiku-20240307-v1:0

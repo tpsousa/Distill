@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: distill-api
+  profiles:
+    active: local
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+aws:
+  region: us-east-1
+  endpoint: http://localhost:4566
+
+distill:
+  storage:
+    bucket: distill-documents
+  queue:
+    name: distill-documents
+  table:
+    name: distill-documents
+
+---
+spring:
+  config:
+    activate:
+      on-profile: aws
+
+aws:
+  region: us-east-1
+  endpoint: ""
+
+distill:
+  storage:
+    bucket: distill-documents
+  queue:
+    name: distill-documents
+  table:
+    name: distill-documents
