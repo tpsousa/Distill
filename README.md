@@ -193,16 +193,16 @@ Esse projeto está sendo feito do zero com apoio de LLMs em todas as etapas, e d
 
 ## Roadmap
 
-- [ ] Fase 0: README, estrutura do repositório e `AGENTS.md`
-- [ ] Fase 1: módulo `core` com domínio, interface `LlmClient` e implementação Ollama
-- [ ] Fase 2: API com `POST` e `GET /documents` rodando no LocalStack
-- [ ] Fase 3: worker consumindo SQS, chamando o LLM e salvando no DynamoDB
-- [ ] Fase 4: idempotência, retry e DLQ
-- [ ] Fase 5: implementação do `LlmClient` com Bedrock
-- [ ] Fase 6: infra com CDK e deploy no Fargate
-- [ ] Fase 7: observabilidade com métricas, alarmes e logs estruturados
-- [ ] Fase 8: CI no GitHub Actions e testes de integração
-- [ ] Extra: front-end simples para upload e visualização dos resultados
+- [x] Fase 0: README, estrutura do repositório e `AGENTS.md`
+- [x] Fase 1: módulo `core` com domínio, interface `LlmClient` e implementação Ollama
+- [x] Fase 2: API com `POST` e `GET /documents` rodando no LocalStack
+- [x] Fase 3: worker consumindo SQS, chamando o LLM e salvando no DynamoDB
+- [x] Fase 4: idempotência, retry e DLQ
+- [x] Fase 5: implementação do `LlmClient` com Bedrock
+- [x] Fase 6: infra com CDK e deploy no Fargate
+- [x] Fase 7: observabilidade com métricas, alarmes e logs estruturados
+- [x] Fase 8: CI no GitHub Actions e testes de integração
+- [x] Extra: front-end simples para upload e visualização dos resultados
 
 As decisões de arquitetura mais importantes vão ser registradas em `docs/adr/`, no formato ADR.
 
