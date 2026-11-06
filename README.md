@@ -155,7 +155,7 @@ Você precisa de Java 21, Maven, Docker e o Ollama com algum modelo baixado.
 docker compose up -d
 
 # baixa um modelo local
-ollama pull llama3.2
+ollama pull qwen3:4b
 
 # sobe a API e o worker
 ./mvnw -pl api spring-boot:run
