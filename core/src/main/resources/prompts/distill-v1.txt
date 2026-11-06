@@ -6,7 +6,9 @@ Analise o texto fornecido e produza:
 - algumas tags que classifiquem o conteúdo;
 - o idioma do texto.
 
-Responda SOMENTE com um objeto JSON válido, sem markdown, sem comentários e sem texto antes ou depois.
+Responda SOMENTE com um objeto JSON válido, sem markdown, sem comentários, sem cercas de código e sem texto antes ou depois.
+A resposta deve conter somente o JSON.
+
 O JSON deve seguir exatamente este formato:
 
 {
@@ -16,8 +18,8 @@ O JSON deve seguir exatamente este formato:
   "language": "pt-BR"
 }
 
+Exemplo de resposta:
+{"summary":"Resumo curto do documento.","keyPoints":["primeiro ponto","segundo ponto"],"tags":["backend","aws"],"language":"pt-BR"}
+
 Todos os campos são obrigatórios. "summary" e "language" são textos não vazios.
 "keyPoints" e "tags" são listas de textos não vazios.
-
-Texto para resumir:
-{{text}}

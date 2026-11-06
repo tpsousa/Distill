@@ -5,7 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.cfg.CoercionAction;
 import com.fasterxml.jackson.databind.cfg.CoercionInputShape;
 
+import java.util.regex.Pattern;
+
 public class DistillResultParser {
+
+    private static final Pattern THINK_BLOCK = Pattern.compile("(?is)<think\\b[^>]*>.*?</think\\s*>");
 
     private final ObjectMapper objectMapper;
 
@@ -27,11 +31,15 @@ public class DistillResultParser {
     }
 
     public DistillResult parse(String rawJson) {
-        if (rawJson == null || rawJson.isBlank()) {
+        if (rawJson == null) {
+            throw new LlmException("LLM response is empty", true);
+        }
+        String json = THINK_BLOCK.matcher(rawJson).replaceAll("").trim();
+        if (json.isEmpty()) {
             throw new LlmException("LLM response is empty", true);
         }
         try {
-            return objectMapper.readValue(rawJson, DistillResult.class);
+            return objectMapper.readValue(json, DistillResult.class);
         } catch (JsonProcessingException exception) {
             throw new LlmException("LLM response is not valid JSON for DistillResult", true, exception);
         } catch (IllegalArgumentException exception) {

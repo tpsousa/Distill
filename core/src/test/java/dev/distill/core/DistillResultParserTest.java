@@ -33,6 +33,56 @@ class DistillResultParserTest {
         assertEquals("pt-BR", result.language());
     }
 
+    @Test
+    void shouldRemoveThinkBlockBeforeJson() {
+        String raw = """
+                <think>
+                O conteúdo tem chaves {assim} e precisa de um resumo.
+                Vou responder apenas com JSON.
+                </think>
+                {
+                  "summary": "Resumo curto",
+                  "keyPoints": ["ponto 1"],
+                  "tags": ["backend"],
+                  "language": "pt-BR"
+                }
+                """;
+
+        DistillResult result = parser.parse(raw);
+
+        assertEquals("Resumo curto", result.summary());
+        assertEquals(List.of("ponto 1"), result.keyPoints());
+        assertEquals(List.of("backend"), result.tags());
+        assertEquals("pt-BR", result.language());
+    }
+
+    @Test
+    void shouldParseJsonWithoutThinkBlock() {
+        String raw = """
+                {
+                  "summary": "Resumo curto",
+                  "keyPoints": ["ponto 1"],
+                  "tags": ["backend"],
+                  "language": "pt-BR"
+                }
+                """;
+
+        DistillResult result = parser.parse(raw);
+
+        assertEquals("Resumo curto", result.summary());
+    }
+
+    @Test
+    void shouldRemoveMultipleThinkBlocksBeforeJson() {
+        String raw = "<think>primeiro</think>\n<THINK>segundo</THINK>\n"
+                + "{\"summary\": \"Resumo\", \"keyPoints\": [\"ponto\"], "
+                + "\"tags\": [\"tag\"], \"language\": \"pt-BR\"}";
+
+        DistillResult result = parser.parse(raw);
+
+        assertEquals("Resumo", result.summary());
+    }
+
     @ParameterizedTest
     @ValueSource(strings = {
             "{",
