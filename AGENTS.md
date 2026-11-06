@@ -68,12 +68,13 @@ Antes de dizer que terminou uma tarefa, rode `./mvnw clean verify` e confirme qu
 
 **LLM.** Todo acesso ao modelo passa pela interface `LlmClient`. Nenhum outro código chama Ollama ou Bedrock diretamente. A saída do modelo é sempre JSON no formato definido em `core`, e deve ser validada antes de ser salva. Resposta inválida conta como falha e entra no fluxo de retry.
 
+**Modelo local.** O padrão é `qwen3:4b`, com o modo de raciocínio (`think`) ligado por padrão e configurável em `OllamaProperties`. O raciocínio do modelo é sempre descartado: use apenas `message.content`, ignore `message.thinking` e remova blocos `<think>...</think>` do texto antes do parse. Nunca persista, retorne na API nem registre em log o conteúdo do raciocínio. Se o `content` vier vazio, trate como falha com retry.
+
 **Prompts.** Ficam em arquivos de recurso (`src/main/resources/prompts/`), não em strings soltas no código. Versione-os e documente a mudança no commit.
 
 **Limites.** Respeite o tamanho máximo de arquivo e o chunking de texto. Não envie documentos inteiros ao modelo sem checar o tamanho.
 
 **Retry e DLQ.** Falhas temporárias usam retry com backoff. Falhas permanentes (arquivo inválido, JSON impossível de validar após as tentativas) vão para a DLQ e marcam o documento como `FAILED`.
-
 ## Segurança
 
 - Nunca coloque chaves, tokens ou credenciais no código, nos testes ou no histórico do git.
