@@ -50,7 +50,7 @@ public class SqsPoller implements SmartLifecycle {
         }
         running = true;
         workerThread = new Thread(this::pollLoop, "sqs-poller");
-        workerThread.setDaemon(true);
+        workerThread.setDaemon(false);
         workerThread.start();
         LOGGER.info("SQS poller started queue={}", properties.name());
     }
