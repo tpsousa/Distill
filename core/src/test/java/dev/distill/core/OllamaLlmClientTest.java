@@ -48,6 +48,7 @@ class OllamaLlmClientTest {
             assertEquals("json", request.get("format").asText());
             assertFalse(request.get("options").has("think"));
             assertEquals(0.6, request.at("/options/temperature").asDouble(), 0.0001);
+            assertEquals(16384, request.at("/options/num_ctx").asInt());
             assertEquals(4096, request.at("/options/num_predict").asInt());
 
             assertEquals("system", request.at("/messages/0/role").asText());
@@ -61,7 +62,7 @@ class OllamaLlmClientTest {
     void shouldSendThinkFalseWhenDisabled() throws Exception {
         try (OllamaStubServer server = OllamaStubServer.responding(200, chatResponse(VALID_RESULT_JSON, null))) {
             OllamaProperties properties = new OllamaProperties(
-                    server.baseUrl(), "qwen3:4b", false, Duration.ofSeconds(5), 0.6, 4096, 24_000);
+                    server.baseUrl(), "qwen3:4b", false, Duration.ofSeconds(5), 0.6, 16384, 4096, 24_000);
             OllamaLlmClient client = new OllamaLlmClient(properties);
 
             client.distill("Texto do documento");
@@ -165,7 +166,7 @@ class OllamaLlmClientTest {
 
     private static OllamaLlmClient clientFor(OllamaStubServer server, Duration timeout, int maxInputChars) {
         OllamaProperties properties = new OllamaProperties(
-                server.baseUrl(), "qwen3:4b", true, timeout, 0.6, 4096, maxInputChars);
+                server.baseUrl(), "qwen3:4b", true, timeout, 0.6, 16384, 4096, maxInputChars);
         return new OllamaLlmClient(properties);
     }
 

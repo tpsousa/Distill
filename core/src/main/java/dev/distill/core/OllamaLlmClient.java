@@ -95,7 +95,7 @@ public class OllamaLlmClient implements LlmClient {
                 false,
                 "json",
                 properties.think(),
-                new ChatOptions(properties.temperature(), properties.numPredict()));
+                new ChatOptions(properties.temperature(), properties.numCtx(), properties.numPredict()));
 
         try {
             String body = objectMapper.writeValueAsString(chatRequest);
@@ -182,6 +182,7 @@ public class OllamaLlmClient implements LlmClient {
 
     private record ChatOptions(
             double temperature,
+            @JsonProperty("num_ctx") int numCtx,
             @JsonProperty("num_predict") int numPredict) {
     }
 
