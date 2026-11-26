@@ -15,17 +15,31 @@ spring:
 aws:
   region: us-east-1
   endpoint: http://localhost:4566
+  access-key-id: test
+  secret-access-key: test
+  s3-path-style-access: true
 
 distill:
   storage:
     bucket: distill-documents
   queue:
-    name: distill-documents
+    name: distill-queue
+    wait-time-seconds: 20
+    max-messages: 1
+    error-backoff: 5s
+    polling-enabled: true
   table:
     name: distill-documents
   llm:
     provider: ollama
-    model: llama3.2
+    base-url: http://localhost:11434
+    model: qwen3:4b
+    think: true
+    timeout: 180s
+    temperature: 0.6
+    num-ctx: 16384
+    num-predict: 4096
+    max-input-chars: 20480
 
 ---
 spring:
@@ -36,14 +50,28 @@ spring:
 aws:
   region: us-east-1
   endpoint: ""
+  access-key-id: ""
+  secret-access-key: ""
+  s3-path-style-access: false
 
 distill:
   storage:
     bucket: distill-documents
   queue:
-    name: distill-documents
+    name: distill-queue
+    wait-time-seconds: 20
+    max-messages: 1
+    error-backoff: 5s
+    polling-enabled: true
   table:
     name: distill-documents
   llm:
     provider: bedrock
+    base-url: http://localhost:11434
     model: anthropic.claude-3-haiku-20240307-v1:0
+    think: true
+    timeout: 180s
+    temperature: 0.6
+    num-ctx: 16384
+    num-predict: 4096
+    max-input-chars: 20480

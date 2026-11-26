@@ -35,6 +35,9 @@ MAIN_QUEUE_URL=$(awslocal sqs get-queue-url --queue-name "$MAIN_QUEUE" --query Q
 DLQ_ARN=$(awslocal sqs get-queue-attributes --queue-url "$DLQ_URL" --attribute-names QueueArn --query 'Attributes.QueueArn' --output text)
 MAIN_QUEUE_ARN=$(awslocal sqs get-queue-attributes --queue-url "$MAIN_QUEUE_URL" --attribute-names QueueArn --query 'Attributes.QueueArn' --output text)
 
+# The visibility timeout must be greater than the LLM timeout (180s); otherwise SQS
+# redelivers the message while the model is still thinking. To recreate the queue
+# locally with these attributes: docker compose down -v && docker compose up -d
 QUEUE_ATTRIBUTES=$(python3 - "$MAIN_QUEUE_ARN" "$DLQ_ARN" "$BUCKET" <<'PY'
 import json
 import sys
@@ -57,6 +60,7 @@ redrive_policy = {"deadLetterTargetArn": dlq_arn, "maxReceiveCount": "3"}
 print(json.dumps({
     "Policy": json.dumps(queue_policy),
     "RedrivePolicy": json.dumps(redrive_policy),
+    "VisibilityTimeout": "300",
 }))
 PY
 )
