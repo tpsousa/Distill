@@ -148,19 +148,31 @@ distill/
 
 ## Rodando localmente
 
-Você precisa de Java 21, Maven, Docker e o Ollama com algum modelo baixado.
+Você precisa de Java 21, Maven, Docker e um modelo no Ollama, seja o da sua máquina ou o do `docker-compose.yml`.
 
 ```bash
-# sobe o LocalStack (S3, SQS, DynamoDB)
+# sobe só o LocalStack (S3, SQS, DynamoDB)
 docker compose up -d
 
-# baixa um modelo local
+# baixa um modelo no Ollama da máquina
 ollama pull qwen3:4b
 
 # sobe a API e o worker
 ./mvnw -pl api spring-boot:run
 ./mvnw -pl worker spring-boot:run
 ```
+
+O serviço `ollama` está no profile `ollama` e não sobe no `docker compose up` padrão. Para usar o Ollama do compose em vez do da máquina:
+
+```bash
+# sobe o LocalStack e o Ollama no container
+docker compose --profile ollama up -d
+
+# baixa o modelo no Ollama do container
+docker compose exec ollama ollama pull qwen3:4b
+```
+
+A API e o worker falam com `http://localhost:11434` nos dois casos, porque o compose publica a porta do container. Não rode os dois ao mesmo tempo: se o Ollama da máquina já estiver usando a porta 11434, o container não consegue subir (`Bind for 0.0.0.0:11434 failed`). Pare um antes de subir o outro.
 
 Existem dois perfis de configuração. O `local` usa LocalStack e Ollama. O `aws` usa os serviços reais e o Bedrock.
 
